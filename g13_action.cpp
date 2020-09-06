@@ -81,18 +81,28 @@ void G13_Action_Keys::dump(std::ostream &out) const {
 
 G13_Action_PipeOut::G13_Action_PipeOut(G13_Device &keypad,
                                        const std::string &out)
-    : G13_Action(keypad), _out(out + "\n") {}
+    : G13_Action(keypad) {
+		_out = Helper::split<std::vector<std::string>>(out, " ");
+	}
 
 G13_Action_PipeOut::~G13_Action_PipeOut() = default;
 
 void G13_Action_PipeOut::act(G13_Device &kp, bool is_down) {
   if (is_down) {
-    kp.OutputPipeWrite(_out);
+    kp.OutputPipeWrite(_out[0] + "\n");
+  } else if (_out.size() > 1) {
+    kp.OutputPipeWrite(_out[1] + "\n");
   }
 }
 
 void G13_Action_PipeOut::dump(std::ostream &o) const {
-  o << "WRITE PIPE : " << Helper::repr(_out);
+  o << "WRITE PIPE : ";
+  
+  for (size_t i = 0; i < _out.size(); i++) {
+    if (i)
+      o << " ";
+    o << _out[i];
+  }
 }
 
 G13_Action_Command::G13_Action_Command(G13_Device &keypad, std::string cmd)

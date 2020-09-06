@@ -75,7 +75,7 @@ public:
   void act(G13_Device &, bool is_down) override;
   void dump(std::ostream &) const override;
 
-  std::string _out;
+  std::vector<std::string> _out;
 };
 
 /*!
